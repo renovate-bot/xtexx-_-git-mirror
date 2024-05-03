@@ -9,13 +9,13 @@ on:
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
   codeberg:
     runs-on: ubuntu-latest
     env:
       REMOTE: codeberg
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Prepare
@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REMOTE: codeberg-xvnet
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Prepare
@@ -42,6 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REMOTE: exogit
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Prepare
