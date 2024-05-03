@@ -9,7 +9,7 @@ git::refs::fetch tools "$1"
 
 while read -r ref; do
 	echo "Deleting ref $ref"
-	wgit push --force :"$ref"
+	wgit push --force "$1" :"$ref"
 done < <(git::refs::withprefix tools "$2")
 
 git::refs::delete tools
