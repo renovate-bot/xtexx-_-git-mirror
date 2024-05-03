@@ -10,26 +10,35 @@ sync::sync_repo() {
 	while read -r ref; do
 		try_call_func anysyncer::hook::should_sync_ref "$name" "$ref" || continue
 		try_call_func "$SYNCER_TYPE"::hook::should_sync_ref "$name" "$ref" || continue
-		local destRef isTag=''
+		local destRef isSignedTagRef=''
 		destRef="$SYNCER_DEST_PREFIX$name/$ref"
 		if [[ "$ref" == *^{} ]]; then
 			destRef="${destRef%\^\{\}}"
-			isTag=true
+			isSignedTagRef=true
 		fi
 		echo "Syncing $name $ref to $destRef"
-		if git::refs::check repo1 "$ref^{}"; then
-			# tags with message
-			return 0
+		if ! git::refs::check repo1 "$ref^{}"; then
+			# commits, or annotated tags, or object ref of signed tags
+			wgit fetch --no-write-fetch-head "$SYNCER_DEST" "$destRef" || true
+			if [[ -z "$isSignedTagRef" ]]; then
+				wgit fetch --write-fetch-head "$url" "$ref"
+				headRev="$(wgit rev-parse FETCH_HEAD)"
+			else
+				wgit fetch --write-fetch-head "$url" "${ref%\^\{\}}"
+				headRev="$(wgit rev-parse 'FETCH_HEAD^{commit}')"
+			fi
+			sync::push_branch "$headRev" "$destRef"
+
+			if [[ "$ref" == refs/tags/* ]]; then
+				if [[ -z "$isSignedTagRef" ]]; then
+					sync::sync_tag "$name" "$url" "${ref#refs\/tags\/}" ""
+				else
+					sync::sync_tag "$name" "$url" "${ref#refs\/tags\/}" "/annotated"
+					local signedRef="${ref%\^\{\}}"
+					sync::sync_tag "$name" "$url" "${signedRef#refs\/tags\/}" "/signed"
+				fi
+			fi
 		fi
-		wgit fetch --no-write-fetch-head "$SYNCER_DEST" "$destRef" || true
-		if [[ -z "$isTag" ]]; then
-			wgit fetch --write-fetch-head "$url" "$ref"
-			headRev="$(wgit rev-parse FETCH_HEAD)"
-		else
-			wgit fetch --write-fetch-head "$url" "${ref%\^\{\}}"
-			headRev="$(wgit rev-parse 'FETCH_HEAD^{commit}')"
-		fi
-		sync::push_branch "$headRev" "$destRef"
 	done <"$(git::refs::file repo)"
 
 	while read -r ref; do
@@ -62,4 +71,16 @@ sync::prune_refs() {
 		echo "Deleting ref $ref"
 		wgit push --force "$SYNCER_DEST" :"$ref"
 	done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX")
+}
+
+# sync::sync_tag <name> <url> <tag> <dest suffix>
+sync::sync_tag() {
+	local name="$1" url="$2" tag="$3" destSuffix="$4"
+	local ref headRev destRef
+	ref="refs/tags/$tag"
+	destRef="$SYNCER_DEST_TAGS_PREFIX$name/$tag$destSuffix"
+
+	wgit fetch --write-fetch-head "$url" "$ref"
+	headRev="$(wgit rev-parse FETCH_HEAD)"
+	sync::push_branch "$headRev" "$destRef"
 }
