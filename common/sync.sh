@@ -33,9 +33,7 @@ sync::sync_repo() {
 				if [[ -z "$isSignedTagRef" ]]; then
 					sync::sync_tag "$name" "$url" "${ref#refs\/tags\/}" ""
 				else
-					sync::sync_tag "$name" "$url" "${ref#refs\/tags\/}" "/annotated"
-					local signedRef="${ref%\^\{\}}"
-					sync::sync_tag "$name" "$url" "${signedRef#refs\/tags\/}" "/signed"
+					sync::sync_signed_tag "$name" "$url" "${ref#refs\/tags\/}"
 				fi
 			fi
 		fi
@@ -73,14 +71,30 @@ sync::prune_refs() {
 	done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX")
 }
 
-# sync::sync_tag <name> <url> <tag> <dest suffix>
+# sync::sync_tag <name> <url> <tag>
 sync::sync_tag() {
-	local name="$1" url="$2" tag="$3" destSuffix="$4"
+	local name="$1" url="$2" tag="$3"
 	local ref headRev destRef
 	ref="refs/tags/$tag"
-	destRef="$SYNCER_DEST_TAGS_PREFIX$name/$tag$destSuffix"
+	destRef="$SYNCER_DEST_TAGS_PREFIX$name/$tag"
 
 	wgit fetch --write-fetch-head "$url" "$ref"
 	headRev="$(wgit rev-parse FETCH_HEAD)"
 	sync::push_branch "$headRev" "$destRef"
+}
+
+# sync::sync_signed_tag <name> <url> <annotated tag>
+sync::sync_signed_tag() {
+	local name="$1" url="$2" tag="$3"
+	local ref="refs/tags/$tag"
+	local signedRef="${ref%\^\{\}}"
+	local headRev
+
+	wgit fetch --write-fetch-head "$url" "$ref"
+	headRev="$(wgit rev-parse FETCH_HEAD)"
+	sync::push_branch "$headRev" "$SYNCER_DEST_TAGS_PREFIX$name/$tag/annotated"
+
+	wgit fetch --write-fetch-head "$url" "$signedRef"
+	headRev="$(wgit rev-parse 'FETCH_HEAD^{tag}')"
+	sync::push_branch "$headRev" "$SYNCER_DEST_TAGS_PREFIX$name/$tag/signed"
 }
