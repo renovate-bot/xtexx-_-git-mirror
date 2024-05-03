@@ -1,6 +1,7 @@
 forgejo::hook::should_sync_ref() {
-	if [[ "$2" == refs/pull/* ]]; then
+	if [[ "$2" == refs/pull/*/head ]]; then
 		false
+		return
 	fi
 	true
 }
