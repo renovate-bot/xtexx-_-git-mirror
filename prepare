@@ -21,9 +21,9 @@ git::config_default user.email action@github.com
 git::config_default user.name github-actions
 git::config_default gc.auto 0
 
-. "common/lib.sh"
-. "impl/impls.sh"
-. "config/common.sh"
+. common/lib.sh
+. impl/impls.sh
+. config/common.sh
 # shellcheck source=/dev/null
 . "config/$REMOTE.sh"
 
