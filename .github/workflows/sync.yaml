@@ -21,6 +21,19 @@ jobs:
       - name: Push
         run: ./push
 
+  codeberg-xvnet:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE: codeberg-xvnet
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        run: ./prepare_actions; ./prepare
+      - name: Sync
+        run: ./sync
+      - name: Push
+        run: ./push
+
   exogit:
     runs-on: ubuntu-latest
     env:

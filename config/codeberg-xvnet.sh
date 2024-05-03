@@ -2,6 +2,6 @@
 
 SYNCER_TYPE=forgejo
 SYNCER_DEST=https://github.com/xtexChooser/git-mirror.git
-SYNCER_DEST_PREFIX=refs/heads/mirror/codeberg/xtex/
+SYNCER_DEST_PREFIX=refs/heads/mirror/codeberg/xvnet/
 FORGEJO_BASE_URL=https://codeberg.org
-FORGEJO_USERNAME=xtex
+FORGEJO_USERNAME=xvnet
