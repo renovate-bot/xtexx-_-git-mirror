@@ -18,14 +18,14 @@ forgejo::sync() {
 			while read -r ref; do
 				try_call_func forgejo::hook::should_sync_ref "$name" "$ref" || continue
 				local destRef
+				if [[ "$ref" =~ .*\^{} ]]; then
+					ref="${ref%\^\{\}}"
+				fi
 				destRef="$SYNCER_DEST_PREFIX$name/$ref"
 				echo "Syncing $name $ref to $destRef"
 				if git::refs::check repo1 "$ref^{}"; then
 					# tags with message
 					continue
-				fi
-				if [[ "$ref" =~ .*\^{} ]]; then
-					destRef="${destRef%\^\{\}}"
 				fi
 				wgit fetch --no-write-fetch-head "$SYNCER_DEST" "$destRef" || true
 				wgit fetch --write-fetch-head "$url" "$ref"
