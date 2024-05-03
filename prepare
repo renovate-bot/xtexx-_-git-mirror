@@ -21,25 +21,12 @@ git::config_default user.email action@github.com
 git::config_default user.name github-actions
 git::config_default gc.auto 0
 
-pre_prepare() {
-	true
-}
-
-prepare() {
-	true
-}
-
-post_prepare() {
-	true
-}
-
 . "common/lib.sh"
+. "impl/impls.sh"
 # shellcheck source=/dev/null
 . "config/$REMOTE.sh"
-# shellcheck source=/dev/null
-. "impl/$SYNCER_TYPE.sh"
 
-"pre_prepare"
+try_call_func "$SYNCER_TYPE::pre_prepare"
 git init --initial-branch=sync "$GIT_W" || true
-"prepare"
-"post_prepare"
+try_call_func "$SYNCER_TYPE::prepare"
+try_call_func "$SYNCER_TYPE::post_prepare"

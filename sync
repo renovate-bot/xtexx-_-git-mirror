@@ -2,20 +2,11 @@
 
 set -xe
 
-pre_sync() {
-	true
-}
-
-post_sync() {
-	true
-}
-
 . "common/lib.sh"
+. "impl/impls.sh"
 # shellcheck source=/dev/null
 . "config/$REMOTE.sh"
-# shellcheck source=/dev/null
-. "impl/$SYNCER_TYPE.sh"
 
-"pre_sync"
-"sync"
-"post_sync"
+try_call_func "$SYNCER_TYPE::pre_sync"
+try_call_func "$SYNCER_TYPE::sync"
+try_call_func "$SYNCER_TYPE::post_sync"

@@ -1,0 +1,21 @@
+name: Activate
+
+on:
+  schedule:
+    - cron: "30 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ci-activation
+      - name: Activate
+        run: |
+          git commit --allow-empty --amend -m "CI Automated Activation @ $(date -u -Iseconds)"
+          git push --force

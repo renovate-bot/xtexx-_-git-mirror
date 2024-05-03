@@ -1,6 +1,13 @@
 : "${W:=$(pwd)}"
 : "${GIT_W:=syncworkspace}"
 
+try_call_func() {
+	if [[ "$(type -t "$1")" == "function" ]]; then
+		"$@"
+	fi
+	return 0
+}
+
 wgit() {
 	git -C "$GIT_W" "$@"
 }

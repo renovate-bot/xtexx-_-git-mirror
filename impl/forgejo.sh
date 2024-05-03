@@ -1,4 +1,4 @@
-sync() {
+forgejo::sync() {
 	git::refs::fetch dest "$SYNCER_DEST"
 
 	local page=1 count=1
@@ -10,10 +10,12 @@ sync() {
 			name="$(wyqs '.name' <<<"$repo")"
 			url="$(wyqs '.url' <<<"$repo")"
 			((count++)) || true
+			try_call_func forgejo::hook::should_sync_repo "$name" || continue
 
 			echo "Syncing $name from $url"
 			git::refs::fetch repo "$url"
 			while read -r ref; do
+				try_call_func forgejo::hook::should_sync_ref "$name" "$ref" || continue
 				local destRef
 				destRef="$SYNCER_DEST_PREFIX$name/$ref"
 				echo "Syncing $name $ref to $destRef"
@@ -24,6 +26,7 @@ sync() {
 			done <"$(git::refs::file repo)"
 
 			while read -r ref; do
+				try_call_func forgejo::hook::should_prune_ref "$ref" || continue
 				echo "Deleting ref $ref"
 				wgit push --force "$SYNCER_DEST" :"$ref"
 			done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX$name/")
@@ -33,6 +36,7 @@ sync() {
 	echo "Forgejo push end"
 
 	while read -r ref; do
+		try_call_func forgejo::hook::should_prune_ref "$ref" || continue
 		echo "Deleting ref $ref"
 		wgit push --force "$SYNCER_DEST" :"$ref"
 	done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX")
