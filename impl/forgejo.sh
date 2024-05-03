@@ -17,10 +17,11 @@ forgejo::sync() {
 			cp -f "$(git::refs::file repo)" "$(git::refs::file repo1)"
 			while read -r ref; do
 				try_call_func forgejo::hook::should_sync_ref "$name" "$ref" || continue
-				local destRef
+				local destRef isTag=''
 				destRef="$SYNCER_DEST_PREFIX$name/$ref"
 				if [[ "$ref" == *^{} ]]; then
 					destRef="${destRef%\^\{\}}"
+					isTag=true
 				fi
 				echo "Syncing $name $ref to $destRef"
 				if git::refs::check repo1 "$ref^{}"; then
@@ -28,8 +29,13 @@ forgejo::sync() {
 					continue
 				fi
 				wgit fetch --no-write-fetch-head "$SYNCER_DEST" "$destRef" || true
-				wgit fetch --write-fetch-head "$url" "$ref"
-				headRev="$(wgit rev-parse FETCH_HEAD)"
+				if [[ -z "$isTag" ]]; then
+					wgit fetch --write-fetch-head "$url" "$ref"
+					headRev="$(wgit rev-parse FETCH_HEAD)"
+				else
+					wgit fetch --write-fetch-head "$url" "${ref%\^\{\}}"
+					headRev="$(wgit rev-parse 'FETCH_HEAD^{commit}')"
+				fi
 				forgejo::push_branch "$headRev" "$destRef"
 			done <"$(git::refs::file repo)"
 
