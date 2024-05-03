@@ -2,7 +2,8 @@
 
 set -e
 
-. "../common/lib.sh"
+# shellcheck source=../common/lib.sh
+. "./common/lib.sh"
 
 git::refs::fetch tools "$1"
 
