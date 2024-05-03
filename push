@@ -4,6 +4,7 @@ set -xe
 
 . "common/lib.sh"
 . "impl/impls.sh"
+. "config/common.sh"
 # shellcheck source=/dev/null
 . "config/$REMOTE.sh"
 
