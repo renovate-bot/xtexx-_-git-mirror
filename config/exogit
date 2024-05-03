@@ -1,0 +1,3 @@
+SYNCER_TYPE=forgejo
+FORGEJO_BASE_URL=https://git.exozy.me
+FORGEJO_USERNAME=xtex

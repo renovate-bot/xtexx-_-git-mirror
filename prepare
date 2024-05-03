@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+apt-get install git curl jq yq
+git config --global user.email action@github.com
+git config --global user.name github-actions
