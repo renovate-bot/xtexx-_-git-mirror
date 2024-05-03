@@ -1,1 +1,25 @@
 #!/usr/bin/env bash
+
+set -xe
+
+pre_push() {
+	true
+}
+
+push() {
+	true
+}
+
+post_push() {
+	true
+}
+
+. "common/lib.sh"
+# shellcheck source=/dev/null
+. "config/$REMOTE.sh"
+# shellcheck source=/dev/null
+. "impl/$SYNCER_TYPE.sh"
+
+"pre_push"
+"push"
+"post_push"

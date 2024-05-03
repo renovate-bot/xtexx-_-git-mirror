@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -xe
+
+apt-get install git curl jq yq

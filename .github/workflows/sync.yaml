@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Prepare
-        run: ./prepare
+        run: ./prepare_actions; ./prepare
       - name: Sync
         run: ./sync
       - name: Push
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Prepare
-        run: ./prepare
+        run: ./prepare_actions; ./prepare
       - name: Sync
         run: ./sync
       - name: Push
