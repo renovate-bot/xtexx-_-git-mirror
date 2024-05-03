@@ -17,7 +17,7 @@ jobs:
           ref: ci-activation
       - name: Activate
         run: |
-          git::config_default user.email action@github.com
-          git::config_default user.name github-actions
+          git config --global user.email action@github.com
+          git config --global user.name github-actions
           git commit --allow-empty --amend -m "CI Automated Activation @ $(date -u -Iseconds)"
           git push --force
