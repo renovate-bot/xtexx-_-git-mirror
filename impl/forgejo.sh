@@ -45,10 +45,15 @@ forgejo::sync() {
 	echo "Forgejo sync end"
 }
 
-# forgejo::push_branch <ref> <ref>
+# forgejo::push_branch <ref> <dest ref>
 forgejo::push_branch() {
 	echo "Pushing $1 to $2"
-	wgit push --force "$SYNCER_DEST" "$1":"$2"
+	wgit push --force "$SYNCER_DEST" "$1":"$2" || {
+		result=$?
+		if try_call_func forgejo::hook::should_fail_on_push_err "$2"; then
+			return $result
+		fi
+	}
 	git::refs::remove dest "$2"
 	echo "Pushed $1 to $2"
 }
