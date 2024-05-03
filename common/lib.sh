@@ -4,6 +4,7 @@
 try_call_func() {
 	if [[ "$(type -t "$1")" == "function" ]]; then
 		"$@"
+		return
 	fi
 	return 0
 }
