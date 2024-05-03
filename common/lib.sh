@@ -41,7 +41,7 @@ git::refs::check() {
 
 # git::refs::remove <list> <ref>
 git::refs::remove() {
-	grep -xv "$2" "$W"/refs."$1".txt >"$W"/refs."$1".txt.1
+	grep -xv "$2" "$W"/refs."$1".txt >"$W"/refs."$1".txt.1 || true
 	mv "$W"/refs."$1".txt.1 "$W"/refs."$1".txt
 }
 
