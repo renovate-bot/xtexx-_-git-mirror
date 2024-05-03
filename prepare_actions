@@ -2,4 +2,6 @@
 
 set -xe
 
-sudo apt-get install git curl jq yq
+sudo apt-get install git curl jq
+sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+sudo chmod +x /usr/bin/yq
