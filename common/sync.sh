@@ -91,7 +91,7 @@ sync::sync_signed_tag() {
 	local signedTag="${tag%\^\{\}}"
 	local headRev
 
-	echo "Syncing signed tag from $name $tag to $signedTag"
+	echo "Syncing signed tag from $name $tag to $signedTag/{signed,annotated}"
 
 	wgit fetch --write-fetch-head "$url" "$signedRef"
 	headRev="$(wgit rev-parse 'FETCH_HEAD^{tag}')"
