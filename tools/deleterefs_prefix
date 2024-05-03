@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+. "../common/lib.sh"
+
+git::refs::fetch tools "$1"
+
+while read -r ref; do
+	echo "Deleting ref $ref"
+	wgit push --force :"$ref"
+done < <(git::refs::withprefix tools "$2")
+
+git::refs::delete tools
+
+echo Done

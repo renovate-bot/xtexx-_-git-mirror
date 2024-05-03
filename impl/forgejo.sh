@@ -25,7 +25,7 @@ sync() {
 
 			while read -r ref; do
 				echo "Deleting ref $ref"
-				wget push --force :"$ref"
+				wgit push --force :"$ref"
 			done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX$name/")
 		done < <(forgejo::list_repos "$FORGEJO_USERNAME" "$((page))")
 		((page++))
@@ -34,7 +34,7 @@ sync() {
 
 	while read -r ref; do
 		echo "Deleting ref $ref"
-		wget push --force :"$ref"
+		wgit push --force :"$ref"
 	done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX")
 	echo "Forgejo prune end"
 
