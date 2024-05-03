@@ -25,7 +25,7 @@ github::sync() {
 # github::list_repos <owner> <page (from 1)>
 github::list_repos() {
 	wcurl -X GET \
-		"$FORGEJO_BASE_URL/$1/repos?page=$2" \
+		"$GITHUB_BASE_URL/$1/repos?page=$2" \
 		-H "Accept: application/vnd.github+json" |
 		wyq '.[] | { "name": .name, "url": .clone_url }'
 }
