@@ -45,6 +45,10 @@ sync::sync_repo() {
 		echo "Deleting ref $ref"
 		wgit push --force "$SYNCER_DEST" :"$ref"
 	done < <(git::refs::withprefix dest "$SYNCER_DEST_PREFIX$name/")
+
+	wgit -c gc.reflogExpire=1 -c gc.reflogExpireUnreachable=0 \
+		-c gc.rerereResolved=0 -c gc.rerereUnresolved=0 \
+		-c gc.pruneExpire=now gc --quiet
 }
 
 # sync::push_branch <ref> <dest ref>
