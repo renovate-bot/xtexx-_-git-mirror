@@ -20,4 +20,6 @@ jobs:
         with:
           ref: main-dest
       - name: Copy main
-        run: git push --force https://xtexChooser:"$GH_TOKEN"@github.com/xtexChooser/central.git HEAD:main
+        run: |
+          git clone . cl
+          git -C cl push --force https://xtexChooser:"$GH_TOKEN"@github.com/xtexChooser/central.git HEAD:main
