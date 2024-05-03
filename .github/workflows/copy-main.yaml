@@ -1,0 +1,23 @@
+name: Copy main
+
+on:
+  push:
+    branches: [main-dest]
+  schedule:
+    - cron: "30 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  copy-main:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main-dest
+      - name: Copy main
+        run: git push --force https://xtexChooser:"$GH_TOKEN"@github.com/xtexChooser/central.git HEAD:main
