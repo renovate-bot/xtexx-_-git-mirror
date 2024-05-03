@@ -1,9 +1,5 @@
 : "${W:=$(pwd)}"
-if [[ -n "$CI" ]]; then
-	: "${GIT_W:=$(pwd)}"
-else
-	: "${GIT_W:=syncworkspace}"
-fi
+: "${GIT_W:=syncworkspace}"
 
 wgit() {
 	git -C "$GIT_W" "$@"
