@@ -1,4 +1,4 @@
-forgejo::sync() {
+github::sync() {
 	git::refs::fetch dest "$SYNCER_DEST"
 
 	local page=1 count=1
@@ -11,21 +11,21 @@ forgejo::sync() {
 			url="$(wyqs '.url' <<<"$repo")"
 			((count++)) || true
 			sync::sync_repo "$name" "$url"
-		done < <(forgejo::list_repos "$FORGEJO_USERNAME" "$page")
+		done < <(github::list_repos "$GITHUB_USERNAME" "$page")
 		((page++))
 	done
-	echo "Forgejo push end"
+	echo "GitHub push end"
 
 	sync::prune_refs
-	echo "Forgejo prune end"
+	echo "GitHub prune end"
 
-	echo "Forgejo sync end"
+	echo "GitHub sync end"
 }
 
-# forgejo::list_repos <owner> <page (from 1)>
-forgejo::list_repos() {
-	wcurl -X 'GET' \
-		"https://codeberg.org/api/v1/users/$1/repos?page=$2&limit=10" \
-		-H 'Accept: application/json' |
+# github::list_repos <owner> <page (from 1)>
+github::list_repos() {
+	wcurl -X GET \
+		"$FORGEJO_BASE_URL/$1/repos?page=$2" \
+		-H "Accept: application/vnd.github+json" |
 		wyq '.[] | { "name": .name, "url": .clone_url }'
 }

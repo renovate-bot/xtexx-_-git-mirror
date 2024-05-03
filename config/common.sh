@@ -1,4 +1,4 @@
-forgejo::hook::should_sync_ref() {
+anysyncer::hook::should_sync_ref() {
 	if [[ "$2" == refs/pull/*/head ]]; then
 		false
 		return
@@ -6,6 +6,14 @@ forgejo::hook::should_sync_ref() {
 	true
 }
 
-forgejo::hook::should_fail_on_push_err() {
+anysyncer::hook::should_fail_on_push_err() {
 	false
+}
+
+anysyncer::hook::should_sync_repo() {
+	if [[ "$1" == "central" ]]; then
+		false
+		return
+	fi
+	true
 }

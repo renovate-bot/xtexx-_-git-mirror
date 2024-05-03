@@ -52,3 +52,17 @@ jobs:
         run: ./sync
       - name: Push
         run: ./push
+
+  github:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE: github
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        run: ./prepare_actions; ./prepare
+      - name: Sync
+        run: ./sync
+      - name: Push
+        run: ./push
