@@ -11,9 +11,7 @@ anysyncer::hook::should_fail_on_push_err() {
 }
 
 anysyncer::hook::should_sync_repo() {
-	if [[ "$1" == "central" ]]; then
-		false
-		return
-	fi
+	[[ "$1" != "central" ]] || return 1
+	[[ "$1" != "linux" ]] || return 1
 	true
 }
