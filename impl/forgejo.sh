@@ -25,7 +25,7 @@ forgejo::sync() {
 # forgejo::list_repos <owner> <page (from 1)>
 forgejo::list_repos() {
 	wcurl -X 'GET' \
-		"https://codeberg.org/api/v1/users/$1/repos?page=$2&limit=10" \
+		"$FORGEJO_BASE_URL/api/v1/users/$1/repos?page=$2&limit=10" \
 		-H 'Accept: application/json' |
 		wyq '.[] | { "name": .name, "url": .clone_url }'
 }
