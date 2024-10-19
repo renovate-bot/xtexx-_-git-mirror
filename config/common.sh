@@ -14,5 +14,6 @@ anysyncer::hook::should_sync_repo() {
 	[[ "$1" != "central" ]] || return 1
 	[[ "$1" != "linux" ]] || return 1
 	[[ "$1" != *-kernel-* ]] || return 1
+	[[ "$1" != *_kernel_* ]] || return 1
 	true
 }
