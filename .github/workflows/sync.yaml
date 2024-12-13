@@ -39,10 +39,24 @@ jobs:
       - name: Push
         run: ./push
 
-  exogit:
+  disroot:
     runs-on: ubuntu-latest
     env:
-      REMOTE: exogit
+      REMOTE: disroot
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        run: ./prepare_actions; ./prepare
+      - name: Sync
+        run: ./sync
+      - name: Push
+        run: ./push
+
+  pub-solar:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE: pub.solar
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
