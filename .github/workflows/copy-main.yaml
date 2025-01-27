@@ -22,4 +22,4 @@ jobs:
       - name: Copy main
         run: |
           git clone . cl
-          git -C cl push --force https://xtexChooser:"$GH_TOKEN"@github.com/xtexChooser/central.git HEAD:main
+          git -C cl push --force https://xtexx:"$GH_TOKEN"@github.com/xtexx/central.git HEAD:main
