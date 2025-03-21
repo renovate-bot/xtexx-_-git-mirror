@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -xe
+set -E
 
 sudo apt-get install git curl jq
 sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
